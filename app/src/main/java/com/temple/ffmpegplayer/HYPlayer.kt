@@ -42,6 +42,9 @@ class HYPlayer {
     @Volatile
     private var demuxComplete = false
 
+    @Volatile
+    private var loop = false
+
     private val demuxerThread: HandlerThread =
         HandlerThread("demuxer-${index}", Thread.MAX_PRIORITY).apply {
             start()
@@ -94,6 +97,8 @@ class HYPlayer {
             nativeSetSource(player, source)
         }
         demuxer.removeCallbacks(demuxRunnable)
+        demuxComplete = false
+        isEnd = false
         isDemuxing = true
         demuxer.post(demuxRunnable)
     }
@@ -124,6 +129,7 @@ class HYPlayer {
         demuxer.post {
             nativeSeek(player, timeMills)
             demuxComplete = false
+            isEnd = false
 
             audioDecoder.post {
                 nativeFlushAudio(player)
@@ -154,14 +160,18 @@ class HYPlayer {
         return currAudioPts
     }
 
+    fun setLoop(loop: Boolean) {
+        this.loop = loop
+    }
+
 //API end-------------------------------------------------------------------------------------------
 
     private val demuxRunnable = object : Runnable {
 
         override fun run() {
-//            if (isEnd) {
-//                return
-//            }
+            if (isEnd) {
+                return
+            }
             Log.d(TAG, "readOnePacket")
             val result = nativeReadOnePacket(player)
             when (result) {
@@ -289,7 +299,9 @@ class HYPlayer {
             mainHandler.post {
                 playerCallback?.onComplete()
             }
-            seek(0)
+            if (loop) {
+                seek(0)
+            }
         }
     }
 

@@ -23,6 +23,9 @@ class MainActivity : AppCompatActivity(), HYPlayerCallback, OnSeekBarChangeListe
     private var duration = 1L
     private var isSeeking = false
 
+    private val musics = HYPlayerApp.getInstance().assets.list("music") ?: emptyArray()
+    private var index = 0
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         val controller = WindowCompat.getInsetsController(window, window.decorView)
@@ -46,15 +49,16 @@ class MainActivity : AppCompatActivity(), HYPlayerCallback, OnSeekBarChangeListe
             }
         }
         ivPrevious.setOnClickListener {
-            player.seek(0)
+            playMusic(false)
         }
         ivNext.setOnClickListener {
-            player.seek(0)
+            playMusic()
         }
 
         player = HYPlayer()
         surfaceView.setPlayer(player)
-        player.setSource("feng.mp4")
+        player.setSource("music/${musics[index]}")
+        player.setLoop(false)
         player.start()
         ivPlay.setImageResource(R.drawable.ic_pause)
         player.setCallback(this)
@@ -90,6 +94,27 @@ class MainActivity : AppCompatActivity(), HYPlayerCallback, OnSeekBarChangeListe
 
     override fun onProgressChanged(seekBar: SeekBar?, progress: Int, fromUser: Boolean) {
 
+    }
+
+    override fun onComplete() {
+        super.onComplete()
+        playMusic()
+    }
+
+    private fun playMusic(next: Boolean = true) {
+        if (next) {
+            index++
+            if (index >= (musics.size)) {
+                index = 0
+            }
+        } else {
+            index--
+            if (index < 0) {
+                index = musics.size - 1
+            }
+        }
+        player.setSource("music/${musics[index]}")
+        player.start()
     }
 
 }

@@ -46,7 +46,7 @@ void HYOpenGLPlayer::doFrame(JNIEnv *env, jobject javaPlayer, long time) {
         updateVideoBufferInfoMethodId = env->GetMethodID(clazz, "updateVideoBufferInfo", "(I)V");
     }
     if (datas.empty()) {
-        ALOGD("HYOpenGLPlayer render datas is empty")
+//        ALOGD("HYOpenGLPlayer render datas is empty")
         return;
     }
     //surface销毁后默认继续播放

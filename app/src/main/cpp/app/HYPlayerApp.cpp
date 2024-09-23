@@ -15,6 +15,9 @@ HYPlayerApp::~HYPlayerApp() {
  * in demux thread
  */
 void HYPlayerApp::setSource(JNIEnv *env, jobject javaPlayer, const char *source) {
+    demuxer.reset(nullptr);
+    audioDecoder.reset(nullptr);
+    videoDecoder.reset(nullptr);
     this->source = source;
     demuxer = std::make_unique<HYDemuxer>(assetManager, source);
     if (demuxer->prepare(env, javaPlayer) == 0) {
