@@ -31,6 +31,9 @@ class IFilter {
 public:
 
     IFilter(std::shared_ptr<AssetManager> &assetManager, const char *fragmentShaderPath) {
+        if (strlen(fragmentShaderPath) == 0) {
+            return;
+        }
         auto vertex_shader_string = assetManager->readFile("video_vertex_shader.glsl");
         auto fragment_shader_string = assetManager->readFile(fragmentShaderPath);
         auto vertexShader = loadShader(GL_VERTEX_SHADER, vertex_shader_string);
@@ -41,7 +44,7 @@ public:
         vTexture = createTexture(GL_TEXTURE_2D);
     };
 
-    void setWindowSize(int width, int height) {
+    virtual void setWindowSize(int width, int height) {
         if (viewWidth != width || viewHeight != height) {
             viewSizeChanged = true;
             viewWidth = width;

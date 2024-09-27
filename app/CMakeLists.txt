@@ -5,6 +5,10 @@ project("hyplayer")
 set(JNI_LIBS_DIR ${CMAKE_SOURCE_DIR}/src/main/jniLibs)
 
 include_directories(
+        ${JNI_LIBS_DIR}/skia
+        ${JNI_LIBS_DIR}/skia/include
+        ${JNI_LIBS_DIR}/skia/modules
+        ${JNI_LIBS_DIR}/skia/src
         ${JNI_LIBS_DIR}/ffmpeg/include
         src/main/cpp
         src/main/cpp/app
@@ -43,6 +47,29 @@ set_target_properties(swscale
         PROPERTIES IMPORTED_LOCATION
         ${JNI_LIBS_DIR}/${ANDROID_ABI}/libswscale.so)
 
+# Import prebuilt SKIA libraries
+
+add_library(skia STATIC IMPORTED)
+set_property(TARGET skia PROPERTY IMPORTED_LOCATION "${JNI_LIBS_DIR}/${ANDROID_ABI}/libskia.a")
+
+add_library(svg STATIC IMPORTED)
+set_property(TARGET svg PROPERTY IMPORTED_LOCATION "${JNI_LIBS_DIR}/${ANDROID_ABI}/libsvg.a")
+
+add_library(skshaper STATIC IMPORTED)
+set_property(TARGET skshaper PROPERTY IMPORTED_LOCATION "${JNI_LIBS_DIR}/${ANDROID_ABI}/libskshaper.a")
+
+add_library(skparagraph STATIC IMPORTED)
+set_property(TARGET skparagraph PROPERTY IMPORTED_LOCATION "${JNI_LIBS_DIR}/${ANDROID_ABI}/libskparagraph.a")
+
+add_library(skunicode STATIC IMPORTED)
+set_property(TARGET skunicode PROPERTY IMPORTED_LOCATION "${JNI_LIBS_DIR}/${ANDROID_ABI}/libskunicode.a")
+
+add_library(skottie STATIC IMPORTED)
+set_property(TARGET skottie PROPERTY IMPORTED_LOCATION "${JNI_LIBS_DIR}/${ANDROID_ABI}/libskottie.a")
+
+add_library(sksg STATIC IMPORTED)
+set_property(TARGET sksg PROPERTY IMPORTED_LOCATION "${JNI_LIBS_DIR}/${ANDROID_ABI}/libsksg.a")
+
 
 aux_source_directory(src/main/cpp srcs)
 aux_source_directory(src/main/cpp/app srcs)
@@ -66,6 +93,14 @@ target_link_libraries(hyplayer
         avutil
         swresample
         swscale
+
+        skia
+        svg
+        skshaper
+        skparagraph
+        skunicode
+        skottie
+        sksg
 
         android EGL GLESv3 jnigraphics OpenSLES
         ${log-lib} ${z-lib} ${android-lib})
