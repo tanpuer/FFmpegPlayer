@@ -65,14 +65,14 @@ public:
         glUseProgram(program);
         auto iViewMatrix = glGetUniformLocation(program, "iViewMatrix");
         glUniformMatrix4fv(iViewMatrix, 1, GL_FALSE, matrix.m);
-        checkGLError("ShaderToyFilter::setUniforms");
+        checkGLError("HYPlayer::setUniforms");
         aPositionLocation = glGetAttribLocation(program, "aPosition");
         glEnableVertexAttribArray(aPositionLocation);
         glVertexAttribPointer(aPositionLocation, 2, GL_FLOAT, GL_FALSE, 8, videoVertex);
         aTextureCoordinateLocation = glGetAttribLocation(program, "aTextureCoord");
         glEnableVertexAttribArray(aTextureCoordinateLocation);
         glVertexAttribPointer(aTextureCoordinateLocation, 2, GL_FLOAT, GL_FALSE, 8, videoTexture);
-        checkGLError("ShaderToyFilter::setAttributes");
+        checkGLError("HYPlayer::setAttributes");
 
         drawTextures(data);
 

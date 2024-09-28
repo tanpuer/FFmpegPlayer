@@ -28,12 +28,12 @@ void HYOpenGLPlayer::create(ANativeWindow *window) {
 }
 
 void HYOpenGLPlayer::change(int width, int height) {
+    glViewport(0, 0, width, height);
     viewWidth = width;
     viewHeight = height;
     if (mFilter) {
         mFilter->setWindowSize(viewWidth, viewHeight);
     }
-    glViewport(0, 0, width, height);
 }
 
 void HYOpenGLPlayer::destroy() {
@@ -53,7 +53,7 @@ void HYOpenGLPlayer::doFrame(JNIEnv *env, jobject javaPlayer, long time) {
     //surface销毁后默认继续播放
     if (mEGLCore != nullptr) {
         glClear(GL_COLOR_BUFFER_BIT);
-        glClearColor(1.0, 1.0, 1.0, 1.0);
+//        glClearColor(1.0, 1.0, 1.0, 1.0);
     }
     auto data = datas.front();
     //Todo 优化视频向音屏同步
