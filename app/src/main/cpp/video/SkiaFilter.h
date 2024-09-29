@@ -4,6 +4,7 @@
 #include "gpu/GrDirectContext.h"
 #include "core/SkCanvas.h"
 #include "core/SkSurface.h"
+#include "YUV420PFilter.h"
 
 class SkiaFilter : public IFilter {
 
@@ -28,5 +29,12 @@ private:
     SkRect rect;
 
     SkPaint paint;
+
+private:
+
+    GLuint videoFrameBuffer = 0;
+    GLuint videoTexture = 0;
+
+    std::unique_ptr<YUV420PFilter> yuv420PFilter = nullptr;
 
 };

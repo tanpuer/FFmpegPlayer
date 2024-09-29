@@ -10,9 +10,13 @@
 #include "core/SkYUVAInfo.h"
 #include "core/SkYUVAPixmaps.h"
 #include "gpu/graphite/Image.h"
+#include "core/SkPictureRecorder.h"
+#include "gpu/ganesh/SkImageGanesh.h"
+#include "gpu/ganesh/gl/GrGLDefines.h"
 
 SkiaFilter::SkiaFilter(std::shared_ptr<AssetManager> &assetManager) : IFilter(assetManager, "") {
     SkGraphics::Init();
+    yuv420PFilter = std::make_unique<YUV420PFilter>(assetManager);
 }
 
 void SkiaFilter::drawTextures(VideoData *data) {
@@ -20,7 +24,19 @@ void SkiaFilter::drawTextures(VideoData *data) {
 }
 
 void SkiaFilter::setWindowSize(int width, int height) {
+    yuv420PFilter->setWindowSize(width, height);
+    glDeleteTextures(1, &videoTexture);
+    glDeleteFramebuffers(1, &videoFrameBuffer);
+    createFrameBuffer(&videoFrameBuffer, &videoTexture, width, height);
+    glBindFramebuffer(GL_FRAMEBUFFER, videoFrameBuffer);
+    glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, videoTexture, 0);
+    if (glCheckFramebufferStatus(GL_FRAMEBUFFER) != GL_FRAMEBUFFER_COMPLETE) {
+        ALOGE("Framebuffer is not complete!")
+    }
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
     rect.setXYWH(0, 0, width, height);
+    paint.setAntiAlias(true);
     paint.setColor(SK_ColorRED);
     IFilter::setWindowSize(width, height);
     auto backendInterface = GrGLMakeNativeInterface();
@@ -36,7 +52,7 @@ void SkiaFilter::setWindowSize(int width, int height) {
     if (samples > maxSamples)
         samples = maxSamples;
     GrGLFramebufferInfo fbInfo;
-    fbInfo.fFBOID = buffer;
+    fbInfo.fFBOID = 0;
     fbInfo.fFormat = GL_RGBA8;
     auto _skRenderTarget = GrBackendRenderTargets::MakeGL(width, height, samples,
                                                           stencil, fbInfo);
@@ -53,20 +69,23 @@ void SkiaFilter::setWindowSize(int width, int height) {
 
 void SkiaFilter::render(VideoData *data) {
     SkASSERT(skCanvas);
-    skCanvas->clear(SK_ColorGREEN);
-//    skCanvas->drawRect(rect, paint);
-    auto info = SkYUVAInfo(SkISize::Make(data->videoWidth, data->videoHeight),
-               SkYUVAInfo::PlaneConfig::kYUV,
-               SkYUVAInfo::Subsampling::k420,
-               SkYUVColorSpace::kJPEG_Full_SkYUVColorSpace);
-//    auto rowBytes = new size_t *[3];
-//    rowBytes[0] = data->y;
-//    rowBytes[1] = data->u;
-//    rowBytes[2] = data->v;
-    auto pixelInfo = SkYUVAPixmapInfo(info, SkYUVAPixmapInfo::DataType::kUnorm8, nullptr);
 
-    auto pixelMaps = SkYUVAPixmaps::Allocate(pixelInfo);
-    auto skImage = SkImages::TextureFromYUVAPixmaps(nullptr, pixelMaps);
-    skCanvas->drawImage(skImage, 0, 0);
+    glBindFramebuffer(GL_FRAMEBUFFER, videoFrameBuffer);
+    yuv420PFilter->render(data);
+
+    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+    skCanvas->clear(SK_ColorBLACK);
+
+    GrGLTextureInfo textureInfo;
+    textureInfo.fID = videoTexture;
+    textureInfo.fTarget = GR_GL_TEXTURE_2D;
+    textureInfo.fFormat = static_cast<GrGLenum>(GrTextureType::k2D);
+    auto backendTexture = GrBackendTextures::MakeGL(videoWidth, videoHeight, skgpu::Mipmapped::kNo,
+                                                    textureInfo);
+    sk_sp<SkImage> image = SkImages::BorrowTextureFrom(
+            skiaContext.get(),
+            backendTexture, kTopLeft_GrSurfaceOrigin, kRGBA_8888_SkColorType,
+            kOpaque_SkAlphaType, nullptr, nullptr, nullptr);
+    skCanvas->drawImage(image, 0, 0);
     skiaContext->flush();
 }
