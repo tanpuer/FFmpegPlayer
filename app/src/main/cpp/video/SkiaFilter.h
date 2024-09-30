@@ -33,4 +33,6 @@ private:
 
     sk_sp<SkRuntimeEffect> runtimeEffect = nullptr;
 
+    std::shared_ptr<AssetManager> assetManager = nullptr;
+
 };

@@ -16,6 +16,7 @@
 
 SkiaFilter::SkiaFilter(std::shared_ptr<AssetManager> &assetManager) : IFilter(assetManager, "") {
     SkGraphics::Init();
+    this->assetManager = assetManager;
 }
 
 void SkiaFilter::drawTextures(VideoData *data) {
@@ -54,27 +55,7 @@ void SkiaFilter::setWindowSize(int width, int height) {
     SkASSERT(skiaSurface);
     skCanvas = skiaSurface->getCanvas();
 
-    static const char *kYUVtoRGBShader = R"(
-        uniform shader y_tex;
-        uniform shader u_tex;
-        uniform shader v_tex;
-
-        uniform float widthRatio;
-        uniform float heightRatio;
-
-        half4 main(float2 coord) {
-            float2 texCoord = float2(coord.x / widthRatio, coord.y / heightRatio);
-//            float2 texCoord = coord;
-            float2 uv_coord = texCoord / 2.0; // Because U/V planes are half the size
-            half y = y_tex.eval(texCoord).r;
-            half u = u_tex.eval(uv_coord).r - 0.5;
-            half v = v_tex.eval(uv_coord).r - 0.5;
-            half r = y + 1.402 * v;
-            half g = y - 0.344 * u - 0.714 * v;
-            half b = y + 1.772 * u;
-            return half4(r, g, b, 1.0);
-        }
-    )";
+    const char *kYUVtoRGBShader = assetManager->readFile("skia_video_fragment_shader.glsl");
     auto [effect, error] = SkRuntimeEffect::MakeForShader(SkString(kYUVtoRGBShader));
     if (!effect) {
         ALOGD("set shader source failed %s", error.data())
@@ -85,16 +66,16 @@ void SkiaFilter::setWindowSize(int width, int height) {
 
 void SkiaFilter::render(VideoData *data) {
     SkASSERT(skCanvas);
-
     skCanvas->clear(SK_ColorBLACK);
-
     auto width = data->videoWidth;
     auto height = data->height;
     auto y_imageInfo = SkImageInfo::Make(data->lineSizeY, height, SkColorType::kGray_8_SkColorType,
                                          kPremul_SkAlphaType);
-    auto u_imageInfo = SkImageInfo::Make(data->lineSizeU, height / 2, SkColorType::kGray_8_SkColorType,
-                                          kPremul_SkAlphaType);
-    auto v_imageInfo = SkImageInfo::Make(data->lineSizeV, height / 2, SkColorType::kGray_8_SkColorType,
+    auto u_imageInfo = SkImageInfo::Make(data->lineSizeU, height / 2,
+                                         SkColorType::kGray_8_SkColorType,
+                                         kPremul_SkAlphaType);
+    auto v_imageInfo = SkImageInfo::Make(data->lineSizeV, height / 2,
+                                         SkColorType::kGray_8_SkColorType,
                                          kPremul_SkAlphaType);
     sk_sp<SkData> y_data = SkData::MakeWithoutCopy(data->y, data->lineSizeY * height);
     sk_sp<SkData> u_data = SkData::MakeWithoutCopy(data->u, data->lineSizeU * (height / 2));
@@ -102,18 +83,16 @@ void SkiaFilter::render(VideoData *data) {
     auto y_image = SkImages::RasterFromData(y_imageInfo, y_data, data->lineSizeY);
     auto u_image = SkImages::RasterFromData(u_imageInfo, u_data, data->lineSizeU);
     auto v_image = SkImages::RasterFromData(v_imageInfo, v_data, data->lineSizeV);
-
     SkRuntimeShaderBuilder builder(runtimeEffect);
     builder.child("y_tex") = y_image->makeShader(SkSamplingOptions());
     builder.child("u_tex") = u_image->makeShader(SkSamplingOptions());
     builder.child("v_tex") = v_image->makeShader(SkSamplingOptions());
-    float screen_ratio = viewWidth * 1.0f / viewHeight;
-    float video_ratio = data->videoWidth * 1.0f / data->videoHeight;
     float ratio = 1.5;
     builder.uniform("widthRatio") = ratio;
     builder.uniform("heightRatio") = ratio;
     sk_sp<SkShader> shader = builder.makeShader();
     paint.setShader(shader);
-    skCanvas->drawRect(SkRect::MakeXYWH(0, 0, data->videoWidth * ratio, data->videoHeight * ratio), paint);
+    skCanvas->drawRect(SkRect::MakeXYWH(0, 0, data->videoWidth * ratio, data->videoHeight * ratio),
+                       paint);
     skiaContext->flush();
 }
