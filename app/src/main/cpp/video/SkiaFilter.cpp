@@ -13,10 +13,15 @@
 #include "core/SkPictureRecorder.h"
 #include "gpu/ganesh/SkImageGanesh.h"
 #include "gpu/ganesh/gl/GrGLDefines.h"
+#include "ports/SkFontMgr_android.h"
 
 SkiaFilter::SkiaFilter(std::shared_ptr<AssetManager> &assetManager) : IFilter(assetManager, "") {
     SkGraphics::Init();
     this->assetManager = assetManager;
+    fontMgr = SkFontMgr_New_Android(nullptr);
+    fontMgr->getFamilyName(0, &familyName);
+    font = std::make_unique<SkFont>(
+            fontMgr->legacyMakeTypeface(familyName.c_str(), SkFontStyle::Normal()));
 }
 
 void SkiaFilter::drawTextures(VideoData *data) {
@@ -102,5 +107,7 @@ void SkiaFilter::render(VideoData *data) {
     skCanvas->drawRect(SkRect::MakeXYWH(0, 0, data->videoWidth * ratio, data->videoHeight * ratio),
                        paint);
     skCanvas->restore();
+    font->setSize(100);
+    skCanvas->drawSimpleText("Skia Draw", 9, SkTextEncoding::kUTF8, 0.0f, 100.0f, *font, titlePaint);
     skiaContext->flush();
 }

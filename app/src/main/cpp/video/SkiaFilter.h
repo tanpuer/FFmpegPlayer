@@ -6,6 +6,8 @@
 #include "core/SkSurface.h"
 #include "YUV420PFilter.h"
 #include "effects/SkRuntimeEffect.h"
+#include "core/SkFont.h"
+#include "core/SkFontMgr.h"
 
 class SkiaFilter : public IFilter {
 
@@ -32,5 +34,13 @@ private:
     sk_sp<SkRuntimeEffect> runtimeEffect = nullptr;
 
     std::shared_ptr<AssetManager> assetManager = nullptr;
+
+    sk_sp<SkFontMgr> fontMgr = nullptr;
+
+    std::unique_ptr<SkFont> font = nullptr;
+
+    SkPaint titlePaint;
+
+    SkString familyName;
 
 };
