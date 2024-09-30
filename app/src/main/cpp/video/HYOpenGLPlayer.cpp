@@ -53,7 +53,7 @@ void HYOpenGLPlayer::doFrame(JNIEnv *env, jobject javaPlayer, long time) {
     //surface销毁后默认继续播放
     if (mEGLCore != nullptr) {
         glClear(GL_COLOR_BUFFER_BIT);
-//        glClearColor(1.0, 1.0, 1.0, 1.0);
+        glClearColor(1.0, 1.0, 1.0, 1.0);
     }
     auto data = datas.front();
     //Todo 优化视频向音屏同步
@@ -76,8 +76,8 @@ void HYOpenGLPlayer::initFilter(VideoData *data) {
         return;
     }
     if (data->type == VideoYUVType::YUV420P) {
-//        mFilter = std::make_unique<YUV420PFilter>(assetManager);
-        mFilter = std::make_unique<SkiaFilter>(assetManager);
+        mFilter = std::make_unique<YUV420PFilter>(assetManager);
+//        mFilter = std::make_unique<SkiaFilter>(assetManager);
     } else if (data->type == VideoYUVType::NV12) {
         mFilter = std::make_unique<NV12Filter>(assetManager);
     } else if (data->type == VideoYUVType::NV21) {
