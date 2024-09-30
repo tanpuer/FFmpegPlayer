@@ -5,7 +5,7 @@ uniform float widthRatio;
 uniform float heightRatio;
 half4 main(float2 coord) {
     float2 texCoord = float2(coord.x / widthRatio, coord.y / heightRatio);
-    float2 uv_coord = texCoord / 2.0; // Because U/V planes are half the size
+    float2 uv_coord = texCoord / 2.0;
     half y = y_tex.eval(texCoord).r;
     half u = u_tex.eval(uv_coord).r - 0.5;
     half v = v_tex.eval(uv_coord).r - 0.5;
