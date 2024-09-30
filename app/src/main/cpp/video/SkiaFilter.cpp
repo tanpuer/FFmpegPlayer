@@ -93,7 +93,14 @@ void SkiaFilter::render(VideoData *data) {
     builder.uniform("heightRatio") = ratio;
     sk_sp<SkShader> shader = builder.makeShader();
     paint.setShader(shader);
+    skCanvas->save();
+    if (widthRatio > heightRatio) {
+        skCanvas->translate((viewWidth - data->videoWidth * ratio) / 2.0, 0);
+    } else {
+        skCanvas->translate(0, (viewHeight - data->videoHeight * ratio) / 2.0);
+    }
     skCanvas->drawRect(SkRect::MakeXYWH(0, 0, data->videoWidth * ratio, data->videoHeight * ratio),
                        paint);
+    skCanvas->restore();
     skiaContext->flush();
 }
