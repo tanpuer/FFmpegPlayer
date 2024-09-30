@@ -24,7 +24,6 @@ void SkiaFilter::drawTextures(VideoData *data) {
 }
 
 void SkiaFilter::setWindowSize(int width, int height) {
-    rect.setXYWH(0, 0, width, height);
     paint.setAntiAlias(true);
     paint.setColor(SK_ColorRED);
     IFilter::setWindowSize(width, height);

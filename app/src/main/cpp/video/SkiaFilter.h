@@ -27,8 +27,6 @@ private:
 
     SkCanvas *skCanvas = nullptr;
 
-    SkRect rect;
-
     SkPaint paint;
 
     sk_sp<SkRuntimeEffect> runtimeEffect = nullptr;
