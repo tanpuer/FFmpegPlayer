@@ -5,6 +5,7 @@
 #include "core/SkCanvas.h"
 #include "core/SkSurface.h"
 #include "YUV420PFilter.h"
+#include "effects/SkRuntimeEffect.h"
 
 class SkiaFilter : public IFilter {
 
@@ -30,11 +31,6 @@ private:
 
     SkPaint paint;
 
-private:
-
-    GLuint videoFrameBuffer = 0;
-    GLuint videoTexture = 0;
-
-    std::unique_ptr<YUV420PFilter> yuv420PFilter = nullptr;
+    sk_sp<SkRuntimeEffect> runtimeEffect = nullptr;
 
 };
