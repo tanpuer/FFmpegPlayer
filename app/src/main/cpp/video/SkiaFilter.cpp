@@ -86,7 +86,9 @@ void SkiaFilter::render(VideoData *data) {
     builder.child("y_tex") = y_image->makeShader(SkSamplingOptions());
     builder.child("u_tex") = u_image->makeShader(SkSamplingOptions());
     builder.child("v_tex") = v_image->makeShader(SkSamplingOptions());
-    float ratio = 1.5;
+    float widthRatio = viewWidth * 1.0f / data->videoWidth;
+    float heightRatio = viewHeight * 1.0f / data->videoHeight;
+    float ratio = std::min(widthRatio, heightRatio);
     builder.uniform("widthRatio") = ratio;
     builder.uniform("heightRatio") = ratio;
     sk_sp<SkShader> shader = builder.makeShader();
