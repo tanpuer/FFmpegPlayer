@@ -15,13 +15,31 @@
 #include "gpu/ganesh/gl/GrGLDefines.h"
 #include "ports/SkFontMgr_android.h"
 
-SkiaFilter::SkiaFilter(std::shared_ptr<AssetManager> &assetManager) : IFilter(assetManager, "") {
+SkiaFilter::SkiaFilter(std::shared_ptr<AssetManager> &assetManager, VideoYUVType type) : IFilter(
+        assetManager, "") {
     SkGraphics::Init();
     this->assetManager = assetManager;
+    this->type = type;
     fontMgr = SkFontMgr_New_Android(nullptr);
     fontMgr->getFamilyName(0, &familyName);
     font = std::make_unique<SkFont>(
             fontMgr->legacyMakeTypeface(familyName.c_str(), SkFontStyle::Normal()));
+
+    std::string path;
+    if (type == VideoYUVType::YUV420P) {
+        path = "skia_yuv420p_fragment_shader.glsl";
+    } else if (type == VideoYUVType::NV12) {
+        path = "skia_nv12_fragment_shader.glsl";
+    } else if (type == VideoYUVType::NV21) {
+        path = "skia_nv21_fragment_shader.glsl";
+    }
+    const char *kYUVtoRGBShader = assetManager->readFile("skia_yuv420p_fragment_shader.glsl");
+    auto [effect, error] = SkRuntimeEffect::MakeForShader(SkString(kYUVtoRGBShader));
+    if (!effect) {
+        ALOGD("set shader source failed %s", error.data())
+        return;
+    }
+    runtimeEffect = effect;
 }
 
 void SkiaFilter::drawTextures(VideoData *data) {
@@ -58,14 +76,6 @@ void SkiaFilter::setWindowSize(int width, int height) {
             nullptr);
     SkASSERT(skiaSurface);
     skCanvas = skiaSurface->getCanvas();
-
-    const char *kYUVtoRGBShader = assetManager->readFile("skia_video_fragment_shader.glsl");
-    auto [effect, error] = SkRuntimeEffect::MakeForShader(SkString(kYUVtoRGBShader));
-    if (!effect) {
-        ALOGD("set shader source failed %s", error.data())
-        return;
-    }
-    runtimeEffect = effect;
 }
 
 void SkiaFilter::render(VideoData *data) {
@@ -75,11 +85,12 @@ void SkiaFilter::render(VideoData *data) {
     auto height = data->height;
     auto y_imageInfo = SkImageInfo::Make(data->lineSizeY, height, SkColorType::kGray_8_SkColorType,
                                          kPremul_SkAlphaType);
-    auto u_imageInfo = SkImageInfo::Make(data->lineSizeU, height / 2,
-                                         SkColorType::kGray_8_SkColorType,
+    auto uvColorType = type == VideoYUVType::YUV420P
+                       ? SkColorType::kGray_8_SkColorType
+                       : SkColorType::kR8G8_unorm_SkColorType;
+    auto u_imageInfo = SkImageInfo::Make(data->lineSizeU, height / 2, uvColorType,
                                          kPremul_SkAlphaType);
-    auto v_imageInfo = SkImageInfo::Make(data->lineSizeV, height / 2,
-                                         SkColorType::kGray_8_SkColorType,
+    auto v_imageInfo = SkImageInfo::Make(data->lineSizeV, height / 2, uvColorType,
                                          kPremul_SkAlphaType);
     sk_sp<SkData> y_data = SkData::MakeWithoutCopy(data->y, data->lineSizeY * height);
     sk_sp<SkData> u_data = SkData::MakeWithoutCopy(data->u, data->lineSizeU * (height / 2));
@@ -108,6 +119,7 @@ void SkiaFilter::render(VideoData *data) {
                        paint);
     skCanvas->restore();
     font->setSize(100);
-    skCanvas->drawSimpleText("Skia Draw", 9, SkTextEncoding::kUTF8, 0.0f, 100.0f, *font, titlePaint);
+    skCanvas->drawSimpleText("Skia Draw", 9, SkTextEncoding::kUTF8, 0.0f, 100.0f, *font,
+                             titlePaint);
     skiaContext->flush();
 }

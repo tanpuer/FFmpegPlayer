@@ -1,7 +1,6 @@
 #version 300 es
 
 precision highp float;
-precision highp int;
 
 uniform sampler2D uTextureY;
 uniform sampler2D uTextureU;

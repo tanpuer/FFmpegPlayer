@@ -13,7 +13,7 @@ class SkiaFilter : public IFilter {
 
 public:
 
-    explicit SkiaFilter(std::shared_ptr<AssetManager> &assetManager);
+    explicit SkiaFilter(std::shared_ptr<AssetManager> &assetManager, VideoYUVType type);
 
     void drawTextures(VideoData *data) override;
 
@@ -42,5 +42,7 @@ private:
     SkPaint titlePaint;
 
     SkString familyName;
+
+    VideoYUVType type = VideoYUVType::YUV420P;
 
 };

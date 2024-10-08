@@ -1,7 +1,6 @@
 #version 300 es
 
 precision highp float;
-precision highp int;
 
 uniform sampler2D uTextureY;
 uniform sampler2D uTextureU;
@@ -9,6 +8,7 @@ uniform sampler2D uTextureV;
 
 in vec2 vTextureCoord;
 out vec4 fragColor;
+
 void main(){
     vec3 yuv;
     vec3 rgb;
