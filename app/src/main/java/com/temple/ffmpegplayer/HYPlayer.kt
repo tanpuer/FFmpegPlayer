@@ -212,7 +212,7 @@ class HYPlayer {
         glHandler.post {
             nativeChangeSurface(videoPlayer, width, height)
         }
-        doFrame()
+        doFrame(true)
     }
 
     fun destroySurface(surface: Surface) {
@@ -221,8 +221,8 @@ class HYPlayer {
         }
     }
 
-    fun doFrame() {
-        if (videoBufferSize == 0 || !isPlaying) {
+    fun doFrame(force: Boolean = false) {
+        if (videoBufferSize == 0 || (!isPlaying && !force)) {
             return
         }
         audioHandler.post {

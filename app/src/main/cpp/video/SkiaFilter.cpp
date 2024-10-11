@@ -80,7 +80,7 @@ void SkiaFilter::setWindowSize(int width, int height) {
 
 void SkiaFilter::render(VideoData *data) {
     SkASSERT(skCanvas);
-    skCanvas->clear(SK_ColorBLACK);
+    skCanvas->clear(SK_ColorWHITE);
     auto width = data->videoWidth;
     auto height = data->height;
     auto y_imageInfo = SkImageInfo::Make(data->lineSizeY, height, SkColorType::kGray_8_SkColorType,
