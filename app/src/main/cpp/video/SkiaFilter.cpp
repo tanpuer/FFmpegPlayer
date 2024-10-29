@@ -14,16 +14,25 @@
 #include "gpu/ganesh/SkImageGanesh.h"
 #include "gpu/ganesh/gl/GrGLDefines.h"
 #include "ports/SkFontMgr_android.h"
+#include "skparagraph/include/TypefaceFontProvider.h"
+#include "skparagraph/include/FontCollection.h"
 
 SkiaFilter::SkiaFilter(std::shared_ptr<AssetManager> &assetManager, VideoYUVType type) : IFilter(
         assetManager, "") {
     SkGraphics::Init();
     this->assetManager = assetManager;
     this->type = type;
+
     fontMgr = SkFontMgr_New_Android(nullptr);
-    fontMgr->getFamilyName(0, &familyName);
-    font = std::make_unique<SkFont>(
-            fontMgr->legacyMakeTypeface(familyName.c_str(), SkFontStyle::Normal()));
+    auto fontProvider = sk_make_sp<TypefaceFontProvider>();
+    auto fontData = assetManager->readImage("font/AlimamaFangYuanTiVF-Thin.ttf");
+    auto data = SkData::MakeWithCopy(fontData->content, fontData->length);
+    auto typeface = fontMgr->makeFromData(std::move(data));
+    fontProvider->registerTypeface(typeface, SkString("Alimama"));
+    delete fontData;
+    fontCollection = sk_make_sp<FontCollection>();
+    fontCollection->setAssetFontManager(std::move(fontProvider));
+    fontCollection->enableFontFallback();
 
     std::string path;
     if (type == VideoYUVType::YUV420P) {
@@ -118,8 +127,24 @@ void SkiaFilter::render(VideoData *data) {
     skCanvas->drawRect(SkRect::MakeXYWH(0, 0, data->videoWidth * ratio, data->videoHeight * ratio),
                        paint);
     skCanvas->restore();
-    font->setSize(100);
-    skCanvas->drawSimpleText("Skia Draw", 9, SkTextEncoding::kUTF8, 0.0f, 100.0f, *font,
-                             titlePaint);
+
+    if (paragraph != nullptr) {
+        paragraph->layout(viewWidth);
+        paragraph->paint(skCanvas, 0, 0);
+    }
+
     skiaContext->flush();
+}
+
+void SkiaFilter::setTitle(const char *title) {
+    IFilter::setTitle(title);
+    skia::textlayout::ParagraphStyle paraStyle;
+    auto paragraphBuilder = ParagraphBuilder::make(paraStyle, fontCollection);
+    TextStyle textStyle;
+    textStyle.setFontSize(50);
+    textStyle.setColor(SK_ColorBLACK);
+    textStyle.setFontFamilies({SkString("Alimama")});
+    paragraphBuilder->pushStyle(textStyle);
+    paragraphBuilder->addText(title);
+    paragraph = paragraphBuilder->Build();
 }

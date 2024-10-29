@@ -101,6 +101,9 @@ class HYPlayer {
         isEnd = false
         isDemuxing = true
         demuxer.post(demuxRunnable)
+        glHandler.post {
+            nativeSetTitle(videoPlayer, source)
+        }
     }
 
     fun start() {
@@ -327,6 +330,7 @@ class HYPlayer {
     private external fun nativeDoFrame(videoPlayer: Long, time: Long)
     private external fun nativeGetVideoPts(videoPlayer: Long): Long
     private external fun nativeClearVideoBuffer(videoPlayer: Long)
+    private external fun nativeSetTitle(videoPlayer: Long, title: String)
 
     private external fun nativeCreateAudioPlayer(): Long
     private external fun nativeSendAudioData(audioPlayer: Long, data: Long)

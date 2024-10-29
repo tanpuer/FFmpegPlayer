@@ -168,6 +168,16 @@ native_ClearVideoBuffer(JNIEnv *env, jobject instance, jlong app, jlong time) {
     }
 }
 
+extern "C" JNIEXPORT void JNICALL
+native_SetTitle(JNIEnv *env, jobject instance, jlong app, jstring title) {
+    auto videoPlayer = reinterpret_cast<HYOpenGLPlayer *>(app);
+    if (videoPlayer != nullptr) {
+        auto cStr = env->GetStringUTFChars(title, nullptr);
+        videoPlayer->setTitle(cStr);
+        env->ReleaseStringUTFChars(title, cStr);
+    }
+}
+
 extern "C" JNIEXPORT jlong JNICALL
 native_GetVideoPts(JNIEnv *env, jobject instance, jlong app, jlong time) {
     auto audioPlayer = reinterpret_cast<HYOpenGLPlayer *>(app);
@@ -228,6 +238,7 @@ static JNINativeMethod g_PlayerMethods[] = {
         {"nativeDestroySurface",    "(JLandroid/view/Surface;)V",            (void *) native_DestroySurface},
         {"nativeDoFrame",           "(JJ)V",                                 (void *) native_DoFrame},
         {"nativeClearVideoBuffer",  "(J)V",                                  (void *) native_ClearVideoBuffer},
+        {"nativeSetTitle",          "(JLjava/lang/String;)V",                (void *) native_SetTitle},
         {"nativeGetAudioPts",       "(J)J",                                  (void *) native_GetAudioPts},
         {"nativeGetVideoPts",       "(J)J",                                  (void *) native_GetVideoPts},
         {"nativeStartAudio",        "(J)V",                                  (void *) native_StartAudio},

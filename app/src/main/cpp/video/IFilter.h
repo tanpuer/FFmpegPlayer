@@ -7,6 +7,7 @@
 #include "matrix_util.h"
 #include "AssetManager.h"
 #include "gl_utils.h"
+#include "string"
 
 static GLfloat videoVertex[] = {
         1.0f, 1.0f,
@@ -85,6 +86,10 @@ public:
 
     virtual void drawTextures(VideoData *data) = 0;
 
+    virtual void setTitle(const char* title) {
+        this->title = title;
+    }
+
 private:
 
     void checkVideoSize(VideoData *data) {
@@ -122,5 +127,7 @@ protected:
     int videoWidth = 0, videoHeight = 0;
 
     bool viewSizeChanged = true;
+
+    std::string title;
 
 };

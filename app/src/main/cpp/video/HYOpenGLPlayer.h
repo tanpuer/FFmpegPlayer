@@ -7,6 +7,7 @@
 #include "AssetManager.h"
 #include "VideoData.h"
 #include "queue"
+#include "string"
 
 class HYOpenGLPlayer {
 public:
@@ -31,6 +32,8 @@ public:
 
     void clearBuffer();
 
+    void setTitle(const char* title);
+
 private:
 
     std::unique_ptr<EGLCore> mEGLCore;
@@ -52,4 +55,6 @@ private:
     int viewWidth = 0, viewHeight = 0;
 
     std::atomic<int64_t> audioPts = 0L;
+
+    std::string title = "";
 };

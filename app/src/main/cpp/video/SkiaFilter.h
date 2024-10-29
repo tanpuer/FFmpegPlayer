@@ -8,6 +8,10 @@
 #include "effects/SkRuntimeEffect.h"
 #include "core/SkFont.h"
 #include "core/SkFontMgr.h"
+#include "skparagraph/include/TypefaceFontProvider.h"
+#include "skparagraph/include/ParagraphBuilder.h"
+
+using namespace skia::textlayout;
 
 class SkiaFilter : public IFilter {
 
@@ -20,6 +24,8 @@ public:
     virtual void setWindowSize(int width, int height) override;
 
     virtual void render(VideoData *data) override;
+
+    void setTitle(const char *title) override;
 
 private:
 
@@ -37,7 +43,9 @@ private:
 
     sk_sp<SkFontMgr> fontMgr = nullptr;
 
-    std::unique_ptr<SkFont> font = nullptr;
+    sk_sp<FontCollection> fontCollection = nullptr;
+
+    std::unique_ptr<Paragraph> paragraph = nullptr;
 
     SkPaint titlePaint;
 

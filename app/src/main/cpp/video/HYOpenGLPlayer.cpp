@@ -84,6 +84,7 @@ void HYOpenGLPlayer::initFilter(VideoData *data) {
 //        mFilter = std::make_unique<NV21Filter>(assetManager);
 //    }
     mFilter->setWindowSize(viewWidth, viewHeight);
+    mFilter->setTitle(title.c_str());
 }
 
 int HYOpenGLPlayer::pushVideoData(VideoData *data) {
@@ -103,5 +104,12 @@ void HYOpenGLPlayer::clearBuffer() {
         auto data = datas.front();
         datas.pop();
         delete data;
+    }
+}
+
+void HYOpenGLPlayer::setTitle(const char* title) {
+    this->title = title;
+    if (mFilter != nullptr) {
+        mFilter->setTitle(title);
     }
 }
