@@ -90,7 +90,7 @@ public:
         this->title = title;
     }
 
-private:
+protected:
 
     void checkVideoSize(VideoData *data) {
         if (data->videoWidth != videoWidth || data->videoHeight != videoHeight || viewSizeChanged) {
