@@ -117,7 +117,7 @@ void SkiaFilterWith3D::render(VideoData *data) {
     SkASSERT(skCanvas);
     skiaContext->resetContext();
 
-    skCanvas->clear(SK_ColorYELLOW);
+    skCanvas->clear(SkColorSetARGB(0x33, 0xFF, 0xFF, 0xFF));
     auto height = data->height;
     auto y_imageInfo = SkImageInfo::Make(data->lineSizeY, height, SkColorType::kGray_8_SkColorType,
                                          kPremul_SkAlphaType);
@@ -160,33 +160,30 @@ void SkiaFilterWith3D::render(VideoData *data) {
         paragraph->paint(skCanvas, 0, 0);
     }
 
-    skiaContext->flush();
+    skiaContext->flushAndSubmit(GrSyncCpu::kNo);
 
     glBindFramebuffer(GL_FRAMEBUFFER, 0);
     glViewport(0, 0, viewWidth, viewHeight);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glClearColor(1.0, 1.0, 1.0, 1.0);
     glEnable(GL_BLEND);
-//    glBindVertexArray(0);
-    glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
-    glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
-    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
-    glBindFramebuffer(GL_FRAMEBUFFER, 0);
-    glUseProgram(0);
-    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
-    glBindBuffer(GL_ARRAY_BUFFER, 0);
     glEnable(GL_DEPTH_TEST);
     glDepthFunc(GL_LESS);
-    glEnable(GL_DEPTH);
-    glEnable(GL_DITHER);
-    glEnable(GL_DEPTH_WRITEMASK);
     glDepthMask(true);
-    glDepthRangef(0.0f, 1.0f);
-    glClearDepthf(1.0f);
-    glEnable(GL_POLYGON_OFFSET_FILL);
-    glEnable(GL_SCISSOR_TEST);
-//    glCullFace(GL_BACK);
-//    glEnable(GL_CULL_FACE);
+    glBindVertexArray(0);
+    glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
+    glBindBuffer(GL_ARRAY_BUFFER, 0);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+    glClearColor(1.0, 1.0, 1.0, 1.0);
+//    glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
+//    glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
+//    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);
+//    glBindFramebuffer(GL_FRAMEBUFFER, 0);
+//    glEnable(GL_DEPTH_WRITEMASK);
+//    glEnable(GL_DEPTH);
+//    glEnable(GL_DITHER);
+//    glDepthRangef(0.0f, 1.0f);
+//    glClearDepthf(1.0f);
+//    glEnable(GL_POLYGON_OFFSET_FILL);
+//    glEnable(GL_SCISSOR_TEST);
 
     glUseProgram(program);
     auto iViewMatrix = glGetUniformLocation(program, "iViewMatrix");

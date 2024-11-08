@@ -141,8 +141,8 @@ void SkiaFilter::setTitle(const char *title) {
     skia::textlayout::ParagraphStyle paraStyle;
     auto paragraphBuilder = ParagraphBuilder::make(paraStyle, fontCollection);
     TextStyle textStyle;
-    textStyle.setFontSize(50);
-    textStyle.setColor(SK_ColorBLACK);
+    textStyle.setFontSize(100);
+    textStyle.setColor(SK_ColorGREEN);
     textStyle.setFontFamilies({SkString("Alimama")});
     paragraphBuilder->pushStyle(textStyle);
     paragraphBuilder->addText(title);
