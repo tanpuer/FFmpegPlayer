@@ -117,9 +117,8 @@ void SkiaFilterWith3D::render(VideoData *data) {
     SkASSERT(skCanvas);
     skiaContext->resetContext();
 
-    skCanvas->clear(SkColorSetARGB(0x33, 0xFF, 0xFF, 0xFF));
-//    skCanvas->clear(SK_ColorWHITE);
-//    skCanvas->drawColor(SK_ColorWHITE, SkBlendMode::kSrc);
+//    skCanvas->drawColor(SkColorSetARGB(0xCC, 0xFF, 0x00, 0xFF), SkBlendMode::kSrcOut);
+    skCanvas->drawColor(SkColorSetARGB(0xCC, 0xFF, 0x00, 0xFF), SkBlendMode::kDstATop);
     auto height = data->height;
     auto y_imageInfo = SkImageInfo::Make(data->lineSizeY, height, SkColorType::kGray_8_SkColorType,
                                          kPremul_SkAlphaType);
@@ -173,8 +172,6 @@ void SkiaFilterWith3D::render(VideoData *data) {
     glBindVertexArray(0);
     glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, 0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
-    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    glClearColor(1.0, 1.0, 1.0, 1.0);
 //    glPixelStorei(GL_UNPACK_ALIGNMENT, 4);
 //    glBindFramebuffer(GL_READ_FRAMEBUFFER, 0);
 //    glBindFramebuffer(GL_DRAW_FRAMEBUFFER, 0);

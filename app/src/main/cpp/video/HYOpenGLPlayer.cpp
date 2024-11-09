@@ -55,7 +55,7 @@ void HYOpenGLPlayer::doFrame(JNIEnv *env, jobject javaPlayer, long time) {
     //surface销毁后默认继续播放
     if (mEGLCore != nullptr) {
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-        glClearColor(0.0, 0.0, 0.0, 0.3);
+        glClearColor(1.0, 1.0, 1.0, 1.0);
         glEnable(GL_DEPTH_TEST);
         glEnable(GL_BLEND);
     }
@@ -79,8 +79,8 @@ void HYOpenGLPlayer::initFilter(VideoData *data) {
     if (mFilter != nullptr) {
         return;
     }
-    mFilter = std::make_unique<SkiaFilter>(assetManager, data->type);
-//    mFilter = std::make_unique<SkiaFilterWith3D>(assetManager, data->type);
+//    mFilter = std::make_unique<SkiaFilter>(assetManager, data->type);
+    mFilter = std::make_unique<SkiaFilterWith3D>(assetManager, data->type);
 //    if (data->type == VideoYUVType::YUV420P) {
 //        mFilter = std::make_unique<YUV420PFilter>(assetManager);
 //    } else if (data->type == VideoYUVType::NV12) {
