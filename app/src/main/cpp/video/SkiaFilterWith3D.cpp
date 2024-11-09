@@ -118,6 +118,8 @@ void SkiaFilterWith3D::render(VideoData *data) {
     skiaContext->resetContext();
 
     skCanvas->clear(SkColorSetARGB(0x33, 0xFF, 0xFF, 0xFF));
+//    skCanvas->clear(SK_ColorWHITE);
+//    skCanvas->drawColor(SK_ColorWHITE, SkBlendMode::kSrc);
     auto height = data->height;
     auto y_imageInfo = SkImageInfo::Make(data->lineSizeY, height, SkColorType::kGray_8_SkColorType,
                                          kPremul_SkAlphaType);
@@ -184,6 +186,7 @@ void SkiaFilterWith3D::render(VideoData *data) {
 //    glClearDepthf(1.0f);
 //    glEnable(GL_POLYGON_OFFSET_FILL);
 //    glEnable(GL_SCISSOR_TEST);
+
 
     glUseProgram(program);
     auto iViewMatrix = glGetUniformLocation(program, "iViewMatrix");
