@@ -36,7 +36,7 @@ char *AssetManager::readFile(const char *path) {
 ImageData *AssetManager::readImage(const char *path) {
     AAsset *asset = AAssetManager_open(asset_manager, path, AASSET_MODE_BUFFER);
     off_t fileLength = AAsset_getLength(asset);
-    auto fileContent = new unsigned char[fileLength + 1];
+    auto fileContent = new char[fileLength + 1];
     AAsset_read(asset, fileContent, fileLength);
     fileContent[fileLength] = '\0';
     AAsset_close(asset);

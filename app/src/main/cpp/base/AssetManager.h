@@ -3,7 +3,7 @@
 #include <android/asset_manager_jni.h>
 
 struct ImageData {
-    const unsigned char *content;
+    const char *content;
     off_t length;
 };
 
