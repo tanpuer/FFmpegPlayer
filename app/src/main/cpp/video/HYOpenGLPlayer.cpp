@@ -5,6 +5,7 @@
 #include "NV21Filter.h"
 #include "SkiaFilter.h"
 #include "SkiaFilterWith3D.h"
+#include "Simple3DFilter.h"
 
 
 HYOpenGLPlayer::HYOpenGLPlayer(JNIEnv *env, jobject javaAssets) {
@@ -80,7 +81,7 @@ void HYOpenGLPlayer::initFilter(VideoData *data) {
         return;
     }
 //    mFilter = std::make_unique<SkiaFilter>(assetManager, data->type);
-    mFilter = std::make_unique<SkiaFilterWith3D>(assetManager, data->type);
+    mFilter = std::make_unique<Simple3DFilter>(assetManager, data->type);
 //    if (data->type == VideoYUVType::YUV420P) {
 //        mFilter = std::make_unique<YUV420PFilter>(assetManager);
 //    } else if (data->type == VideoYUVType::NV12) {

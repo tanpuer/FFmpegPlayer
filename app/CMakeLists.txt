@@ -16,6 +16,7 @@ include_directories(
         src/main/cpp/base
         src/main/cpp/video
         src/main/cpp/demux
+        src/main/cpp/3d
 )
 
 add_library(avcodec SHARED IMPORTED)
@@ -77,6 +78,7 @@ aux_source_directory(src/main/cpp/audio srcs)
 aux_source_directory(src/main/cpp/base srcs)
 aux_source_directory(src/main/cpp/video srcs)
 aux_source_directory(src/main/cpp/demux srcs)
+aux_source_directory(src/main/cpp/3d srcs)
 
 add_library(hyplayer SHARED ${srcs})
 

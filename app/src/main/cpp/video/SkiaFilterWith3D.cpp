@@ -50,12 +50,6 @@ SkiaFilterWith3D::SkiaFilterWith3D(std::shared_ptr<AssetManager> &assetManager, 
         return;
     }
     runtimeEffect = effect;
-
-    auto vertex_shader_string = assetManager->readFile("video_vertex_shader.glsl");
-    auto fragment_shader_string = assetManager->readFile("simple_3d_fragment_shader.glsl");
-    auto vertexShader = loadShader(GL_VERTEX_SHADER, vertex_shader_string);
-    auto fragmentShader = loadShader(GL_FRAGMENT_SHADER, fragment_shader_string);
-    program = createShaderProgram(vertexShader, fragmentShader);
 }
 
 void SkiaFilterWith3D::drawTextures(VideoData *data) {
@@ -184,47 +178,7 @@ void SkiaFilterWith3D::render(VideoData *data) {
 //    glEnable(GL_POLYGON_OFFSET_FILL);
 //    glEnable(GL_SCISSOR_TEST);
 
-
-    glUseProgram(program);
-    auto iViewMatrix = glGetUniformLocation(program, "iViewMatrix");
-
-    ESMatrix viewMatrix;
-    setLookAtM(&viewMatrix, 0, -5.0f, -5.0f, -3.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
-    ESMatrix modelMatrix;
-    setIdentityM(&modelMatrix);
-    static float rotate = 0.0f;
-    rotate += 1.0f;
-    rotateM(&modelMatrix, rotate, 0.0f, 1.0f, 0.0f);
-    ESMatrix projectMatrix;
-    perspectiveM(&projectMatrix, 0, 45.0f, (float) viewWidth / (float) viewHeight, 0.1f, 100.0f);
-    ESMatrix mvMatrix;
-    multiplyMM(&mvMatrix, &viewMatrix, &modelMatrix);
-    ESMatrix mvpMatrix;
-    multiplyMM(&mvpMatrix, &projectMatrix, &mvMatrix);
-
-    glUniformMatrix4fv(iViewMatrix, 1, GL_FALSE, mvpMatrix.m);
-    checkGLError("HYPlayer::setUniforms");
-    aPositionLocation = glGetAttribLocation(program, "aPosition");
-    glEnableVertexAttribArray(aPositionLocation);
-    glVertexAttribPointer(aPositionLocation, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), vertices);
-    aTextureCoordinateLocation = glGetAttribLocation(program, "aTextureCoord");
-    glEnableVertexAttribArray(aTextureCoordinateLocation);
-    glVertexAttribPointer(aTextureCoordinateLocation, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat),
-                          &vertices[3]);
-    checkGLError("HYPlayer::setAttributes");
-
-    skiaTextureLocation = glGetUniformLocation(program, "skia_texture");
-    checkGLError("HYPlayer::glGetUniformLocation");
-    glActiveTexture(GL_TEXTURE0 + skiaTexture);
-    glBindTexture(GL_TEXTURE_2D, skiaTexture);
-    glUniform1i(skiaTextureLocation, skiaTexture);
-
-    glDrawElements(GL_TRIANGLES, 36, GL_UNSIGNED_SHORT, indices);
-    checkGLError("HYPlayer::glDrawArrays");
-    glDisableVertexAttribArray(aPositionLocation);
-    glDisableVertexAttribArray(aTextureCoordinateLocation);
-    glBindTexture(GL_TEXTURE_2D, 0);
-
+    draw3D();
 }
 
 void SkiaFilterWith3D::setTitle(const char *title) {
