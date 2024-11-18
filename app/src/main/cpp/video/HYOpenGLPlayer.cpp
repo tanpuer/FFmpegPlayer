@@ -115,7 +115,7 @@ void HYOpenGLPlayer::clearBuffer() {
     }
 }
 
-void HYOpenGLPlayer::setTitle(const char* title) {
+void HYOpenGLPlayer::setTitle(const char *title) {
     this->title = title;
     if (mFilter != nullptr) {
         mFilter->setTitle(title);
