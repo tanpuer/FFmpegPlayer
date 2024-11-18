@@ -252,8 +252,8 @@ LoadObjAndConvert(float bmin[3], float bmax[3], std::shared_ptr<AssetManager> &a
 
     tinyobj::ObjReader reader;
 
-    auto objStr = assetManager->readImage("tv/tv.obj");
-    auto mtlStr = assetManager->readImage("tv/tv.mtl");
+    auto objStr = assetManager->readImage("tv/tv-2.obj");
+    auto mtlStr = assetManager->readImage("tv/tv-2.mtl");
     if (!reader.ParseFromString(objStr->content, mtlStr->content)) {
         if (!reader.Error().empty()) {
             ALOGE("TinyObjReader: %s", reader.Error().c_str())
@@ -616,22 +616,28 @@ void SimpleObjFilter::draw3D() {
                 glActiveTexture(GL_TEXTURE0 + textures[diffuse_texname]);
                 glBindTexture(GL_TEXTURE_2D, textures[diffuse_texname]);
                 glUniform1i(skiaTextureLocation, textures[diffuse_texname]);
+            } else {
+                skiaTextureLocation = glGetUniformLocation(program, "skia_texture");
+                glActiveTexture(GL_TEXTURE0 + skiaTexture);
+                glBindTexture(GL_TEXTURE_2D, skiaTexture);
+                glUniform1i(skiaTextureLocation, skiaTexture);
             }
+
         }
         // Vertex position
         GLint posAttrib = glGetAttribLocation(program, "position");
         glEnableVertexAttribArray(posAttrib);
         glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, stride, (const void *) 0);
 
-        GLint normalAttrib = glGetAttribLocation(program, "normal");
-        glEnableVertexAttribArray(normalAttrib);
-        glVertexAttribPointer(normalAttrib, 3, GL_FLOAT, GL_FALSE, stride,
-                              (const void *) (sizeof(float) * 3));
-
-        GLint colorAttrib = glGetAttribLocation(program, "color");
-        glEnableVertexAttribArray(colorAttrib);
-        glVertexAttribPointer(colorAttrib, 3, GL_FLOAT, GL_FALSE, stride,
-                              (const void *) (sizeof(float) * 6));
+//        GLint normalAttrib = glGetAttribLocation(program, "normal");
+//        glEnableVertexAttribArray(normalAttrib);
+//        glVertexAttribPointer(normalAttrib, 3, GL_FLOAT, GL_FALSE, stride,
+//                              (const void *) (sizeof(float) * 3));
+//
+//        GLint colorAttrib = glGetAttribLocation(program, "color");
+//        glEnableVertexAttribArray(colorAttrib);
+//        glVertexAttribPointer(colorAttrib, 3, GL_FLOAT, GL_FALSE, stride,
+//                              (const void *) (sizeof(float) * 6));
 
 // Texture coordinates
         GLint texCoordAttrib = glGetAttribLocation(program, "texCoord");

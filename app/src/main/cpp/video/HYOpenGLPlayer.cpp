@@ -82,8 +82,8 @@ void HYOpenGLPlayer::initFilter(VideoData *data) {
         return;
     }
 //    mFilter = std::make_unique<SkiaFilter>(assetManager, data->type);
-    mFilter = std::make_unique<Simple3DFilter>(assetManager, data->type);
-//    mFilter = std::make_unique<SimpleObjFilter>(assetManager, data->type);
+//    mFilter = std::make_unique<Simple3DFilter>(assetManager, data->type);
+    mFilter = std::make_unique<SimpleObjFilter>(assetManager, data->type);
 //    if (data->type == VideoYUVType::YUV420P) {
 //        mFilter = std::make_unique<YUV420PFilter>(assetManager);
 //    } else if (data->type == VideoYUVType::NV12) {
