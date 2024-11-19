@@ -564,8 +564,7 @@ SimpleObjFilter::~SimpleObjFilter() {
 }
 
 void SimpleObjFilter::draw3D() {
-    static bool firstFlag = true;
-    if (firstFlag) {
+    if (gDrawObjects.empty()) {
         float bmin[3], bmax[3];
         LoadObjAndConvert(bmin, bmax, assetManager, &gDrawObjects, materials, textures);
 
@@ -576,7 +575,6 @@ void SimpleObjFilter::draw3D() {
         if (maxExtent < 0.5f * (bmax[2] - bmin[2])) {
             maxExtent = 0.5f * (bmax[2] - bmin[2]);
         }
-        firstFlag = false;
     }
 
     checkGLError("draw3D");
@@ -616,7 +614,8 @@ void SimpleObjFilter::draw3D() {
                 glActiveTexture(GL_TEXTURE0 + textures[diffuse_texname]);
                 glBindTexture(GL_TEXTURE_2D, textures[diffuse_texname]);
                 glUniform1i(skiaTextureLocation, textures[diffuse_texname]);
-            } else {
+            } else if (o.numTriangles > 5000) {
+                //TODO!!!!!
                 skiaTextureLocation = glGetUniformLocation(program, "skia_texture");
                 glActiveTexture(GL_TEXTURE0 + skiaTexture);
                 glBindTexture(GL_TEXTURE_2D, skiaTexture);
@@ -629,15 +628,20 @@ void SimpleObjFilter::draw3D() {
         glEnableVertexAttribArray(posAttrib);
         glVertexAttribPointer(posAttrib, 3, GL_FLOAT, GL_FALSE, stride, (const void *) 0);
 
-//        GLint normalAttrib = glGetAttribLocation(program, "normal");
-//        glEnableVertexAttribArray(normalAttrib);
-//        glVertexAttribPointer(normalAttrib, 3, GL_FLOAT, GL_FALSE, stride,
-//                              (const void *) (sizeof(float) * 3));
-//
-//        GLint colorAttrib = glGetAttribLocation(program, "color");
-//        glEnableVertexAttribArray(colorAttrib);
-//        glVertexAttribPointer(colorAttrib, 3, GL_FLOAT, GL_FALSE, stride,
-//                              (const void *) (sizeof(float) * 6));
+        GLint normalAttrib = glGetAttribLocation(program, "normal");
+        if (normalAttrib > 0) {
+            glEnableVertexAttribArray(normalAttrib);
+            glVertexAttribPointer(normalAttrib, 3, GL_FLOAT, GL_FALSE, stride,
+                                  (const void *) (sizeof(float) * 3));
+        }
+
+        GLint colorAttrib = glGetAttribLocation(program, "color");
+        if (colorAttrib > 0) {
+            glEnableVertexAttribArray(colorAttrib);
+            glVertexAttribPointer(colorAttrib, 3, GL_FLOAT, GL_FALSE, stride,
+                                  (const void *) (sizeof(float) * 6));
+        }
+
 
 // Texture coordinates
         GLint texCoordAttrib = glGetAttribLocation(program, "texCoord");

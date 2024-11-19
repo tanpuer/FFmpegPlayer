@@ -57,7 +57,9 @@ void SkiaFilterWith3D::drawTextures(VideoData *data) {
 }
 
 void SkiaFilterWith3D::setWindowSize(int width, int height) {
-    skiaSize = std::min(width, height);
+    auto minSize = std::min(width, height);
+    skiaWidth = minSize * 0.8;
+    skiaHeight = minSize;
     if (skiaFramebuffer != 0) {
         glDeleteFramebuffers(1, &skiaFramebuffer);
         glDeleteTextures(1, &skiaTexture);
@@ -66,7 +68,7 @@ void SkiaFilterWith3D::setWindowSize(int width, int height) {
     glBindFramebuffer(GL_FRAMEBUFFER, skiaFramebuffer);
     glGenTextures(1, &skiaTexture);
     glBindTexture(GL_TEXTURE_2D, skiaTexture);
-    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, skiaSize, skiaSize, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
+    glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, skiaWidth, skiaHeight, 0, GL_RGBA, GL_UNSIGNED_BYTE, NULL);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
     glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
     glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, skiaTexture, 0);
@@ -87,7 +89,7 @@ void SkiaFilterWith3D::setWindowSize(int width, int height) {
     glInfo.fID = skiaTexture;
     glInfo.fTarget = GL_TEXTURE_2D;
     glInfo.fFormat = GL_RGBA8;
-    auto backendTexture = GrBackendTextures::MakeGL(skiaSize, skiaSize, skgpu::Mipmapped::kNo,
+    auto backendTexture = GrBackendTextures::MakeGL(skiaWidth, skiaHeight, skgpu::Mipmapped::kNo,
                                                     glInfo);
     SkASSERT(backendTexture.isValid());
     skiaSurface = SkSurfaces::WrapBackendTexture(
@@ -133,8 +135,8 @@ void SkiaFilterWith3D::render(VideoData *data) {
     builder.child("y_tex") = y_image->makeShader(SkSamplingOptions());
     builder.child("u_tex") = u_image->makeShader(SkSamplingOptions());
     builder.child("v_tex") = v_image->makeShader(SkSamplingOptions());
-    float widthRatio = skiaSize * 1.0f / data->videoWidth;
-    float heightRatio = skiaSize * 1.0f / data->videoHeight;
+    float widthRatio = skiaWidth * 1.0f / data->videoWidth;
+    float heightRatio = skiaHeight * 1.0f / data->videoHeight;
     float ratio = std::min(widthRatio, heightRatio);
     builder.uniform("widthRatio") = ratio;
     builder.uniform("heightRatio") = ratio;
@@ -143,15 +145,15 @@ void SkiaFilterWith3D::render(VideoData *data) {
     skCanvas->save();
 
     if (widthRatio > heightRatio) {
-        skCanvas->translate((skiaSize - data->videoWidth * ratio) / 2.0, 0);
+        skCanvas->translate((skiaHeight - data->videoWidth * ratio) / 2.0, 0);
     } else {
-        skCanvas->translate(0, (skiaSize - data->videoHeight * ratio) / 2.0);
+        skCanvas->translate(0, (skiaWidth - data->videoHeight * ratio) / 2.0);
     }
     skCanvas->drawRect(SkRect::MakeXYWH(0, 0, data->videoWidth * ratio, data->videoHeight * ratio),
                        paint);
     skCanvas->restore();
     if (paragraph != nullptr) {
-        paragraph->layout(skiaSize);
+        paragraph->layout(skiaWidth);
         paragraph->paint(skCanvas, 0, 0);
     }
 

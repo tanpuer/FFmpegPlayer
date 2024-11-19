@@ -60,6 +60,7 @@ protected:
     GLuint skiaFramebuffer = 0;
     GLuint skiaTexture = 0;
     GLint skiaTextureLocation = -1;
-    int skiaSize = 0;
+    int skiaWidth = 0;
+    int skiaHeight = 0;
 
 };
