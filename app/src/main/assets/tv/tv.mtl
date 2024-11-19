@@ -20,7 +20,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd textures/Tex.details 8000.jpg
+map_Kd tv/textures/Tex.details 8000.jpg
 
 newmtl Mat-back_cover
 Ns 89.585188
@@ -51,7 +51,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd textures/Tex.details 8000.jpg
+map_Kd tv/textures/Tex.details 8000.jpg
 
 newmtl Mat_alu_slat_top
 Ns 225.000000
@@ -62,7 +62,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd textures/Tex.details 8000.jpg
+map_Kd tv/textures/Tex.details 8000.jpg
 
 newmtl Mat_casing
 Ns 900.000000
@@ -73,7 +73,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 1
-map_Kd textures/tex casing.jpg
+map_Kd tv/textures/tex casing.jpg
 
 newmtl Mat_luminofor
 Ns 381.762579
@@ -84,7 +84,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 1
-map_Kd textures/2.jpg
+map_Kd tv/textures/2.jpg
 
 newmtl Mat_metal_scratch_b,s,
 Ns 225.000000
@@ -95,7 +95,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd textures/Tex.details 8000.jpg
+map_Kd tv/textures/Tex.details 8000.jpg
 
 newmtl Mat_metalscre._potentiometer_6
 Ns 639.847311
@@ -106,7 +106,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 3
-map_Kd textures/Tex.details 8000.jpg
+map_Kd tv/textures/Tex.details 8000.jpg
 
 newmtl Mat_metalscre._potentiometer__4
 Ns 225.000000
@@ -147,7 +147,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd textures/Tex.details 8000.jpg
+map_Kd tv/textures/Tex.details 8000.jpg
 
 newmtl Mat_metalscre.potentiometer_2
 Ns 225.000000
@@ -198,7 +198,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 3
-map_Kd textures/Tex.details 8000.jpg
+map_Kd tv/textures/Tex.details 8000.jpg
 
 newmtl Mat_plastic._potentiometer_4
 Ns 157.877594
@@ -209,7 +209,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 3
-map_Kd textures/Tex.details 8000.jpg
+map_Kd tv/textures/Tex.details 8000.jpg
 
 newmtl Mat_plastic._potentiometer_6
 Ns 157.877594
@@ -220,7 +220,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 3
-map_Kd textures/Tex.details 8000.jpg
+map_Kd tv/textures/Tex.details 8000.jpg
 
 newmtl Mat_plastic.band_switch
 Ns 157.877594
@@ -231,7 +231,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 3
-map_Kd textures/Tex.details 8000.jpg
+map_Kd tv/textures/Tex.details 8000.jpg
 
 newmtl Mat_plastic.knob_2
 Ns 157.877594
@@ -242,7 +242,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 3
-map_Kd textures/Tex.details 8000.jpg
+map_Kd tv/textures/Tex.details 8000.jpg
 
 newmtl Mat_plastic.left_lrg
 Ns 157.877594
@@ -253,7 +253,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 3
-map_Kd textures/Tex.details II.jpg
+map_Kd tv/textures/Tex.details II.jpg
 
 newmtl Mat_plastic.potentiometer2
 Ns 157.877594
@@ -264,7 +264,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 3
-map_Kd textures/Tex.details 8000.jpg
+map_Kd tv/textures/Tex.details 8000.jpg
 
 newmtl Mat_plastic.potentiometer_1
 Ns 157.877594
@@ -275,7 +275,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 3
-map_Kd textures/Tex.details 8000.jpg
+map_Kd tv/textures/Tex.details 8000.jpg
 
 newmtl Mat_plastic.potentiometer_3
 Ns 157.877594
@@ -286,7 +286,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 3
-map_Kd textures/Tex.details 8000.jpg
+map_Kd tv/textures/Tex.details 8000.jpg
 
 newmtl Mat_plastic.potentiometer__5
 Ns 157.877594
@@ -297,7 +297,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 3
-map_Kd textures/Tex.details 8000.jpg
+map_Kd tv/textures/Tex.details 8000.jpg
 
 newmtl Mat_plastic.power_switch
 Ns 165.306149
@@ -308,7 +308,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 3
-map_Kd textures/Tex.details 8000.jpg
+map_Kd tv/textures/Tex.details 8000.jpg
 
 newmtl Mat_plastic.right_leg
 Ns 157.877594
@@ -319,7 +319,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 3
-map_Kd textures/Tex.details II.jpg
+map_Kd tv/textures/Tex.details II.jpg
 
 newmtl Mat_plastic.speaker_cover
 Ns 157.877594
@@ -330,7 +330,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 3
-map_Kd textures/Tex.details II.jpg
+map_Kd tv/textures/Tex.details II.jpg
 
 newmtl Mat_wood_maskl_left
 Ns 225.000000
@@ -341,7 +341,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd textures/Tex.details II.jpg
+map_Kd tv/textures/Tex.details II.jpg
 
 newmtl Mat_wood_maskl_right
 Ns 768.987685
@@ -352,7 +352,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd textures/Tex.details II.jpg
+map_Kd tv/textures/Tex.details II.jpg
 
 newmtl Material-MASKA-przycisków
 Ns 225.000000
@@ -363,7 +363,7 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 2
-map_Kd textures/Tex.details II.jpg
+map_Kd tv/textures/Tex.details II.jpg
 
 newmtl Material.001
 Ns 0.000000
@@ -384,4 +384,4 @@ Ke 0.000000 0.000000 0.000000
 Ni 1.450000
 d 1.000000
 illum 1
-map_Kd textures/Tex.details II.jpg
+map_Kd tv/textures/Tex.details II.jpg

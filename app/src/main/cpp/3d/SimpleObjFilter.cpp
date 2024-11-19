@@ -243,17 +243,20 @@ static bool hasSmoothingGroup(const tinyobj::shape_t &shape) {
 }
 
 static void
-LoadObjAndConvert(float bmin[3], float bmax[3], std::shared_ptr<AssetManager> &assetManager,
-                  std::vector<DrawObject> *drawObjects,
-                  std::vector<tinyobj::material_t> &materials,
-                  std::map<std::string, GLuint> &textures) {
+LoadObjAndConvert(
+        const char *objPath,
+        const char *mtlPath,
+        float bmin[3], float bmax[3], std::shared_ptr<AssetManager> &assetManager,
+        std::vector<DrawObject> *drawObjects,
+        std::vector<tinyobj::material_t> &materials,
+        std::map<std::string, GLuint> &textures) {
     tinyobj::attrib_t inattrib;
     std::vector<tinyobj::shape_t> inshapes;
 
     tinyobj::ObjReader reader;
 
-    auto objStr = assetManager->readImage("tv/tv-2.obj");
-    auto mtlStr = assetManager->readImage("tv/tv-2.mtl");
+    auto objStr = assetManager->readImage(objPath);
+    auto mtlStr = assetManager->readImage(mtlPath);
     if (!reader.ParseFromString(objStr->content, mtlStr->content)) {
         if (!reader.Error().empty()) {
             ALOGE("TinyObjReader: %s", reader.Error().c_str())
@@ -276,7 +279,7 @@ LoadObjAndConvert(float bmin[3], float bmax[3], std::shared_ptr<AssetManager> &a
 
     for (size_t i = 0; i < materials.size(); i++) {
         ALOGD("material[%d].diffuse_texname = %s\n", int(i),
-               materials[i].diffuse_texname.c_str());
+              materials[i].diffuse_texname.c_str());
     }
 
     // Load diffuse textures
@@ -291,7 +294,7 @@ LoadObjAndConvert(float bmin[3], float bmax[3], std::shared_ptr<AssetManager> &a
                     int w, h;
                     int comp;
 
-                    std::string texture_filename = "tv/" + mp->diffuse_texname;
+                    std::string texture_filename = mp->diffuse_texname;
 
                     auto imageData = assetManager->readImage(texture_filename.c_str());
                     unsigned char *image = stbi_load_from_memory(
@@ -566,7 +569,7 @@ SimpleObjFilter::~SimpleObjFilter() {
 void SimpleObjFilter::draw3D() {
     if (gDrawObjects.empty()) {
         float bmin[3], bmax[3];
-        LoadObjAndConvert(bmin, bmax, assetManager, &gDrawObjects, materials, textures);
+        LoadObjAndConvert("tv/tv-2.obj", "tv/tv-2.mtl", bmin, bmax, assetManager, &gDrawObjects, materials, textures);
 
         float maxExtent = 0.5f * (bmax[0] - bmin[0]);
         if (maxExtent < 0.5f * (bmax[1] - bmin[1])) {
@@ -642,8 +645,6 @@ void SimpleObjFilter::draw3D() {
                                   (const void *) (sizeof(float) * 6));
         }
 
-
-// Texture coordinates
         GLint texCoordAttrib = glGetAttribLocation(program, "texCoord");
         glEnableVertexAttribArray(texCoordAttrib);
         glVertexAttribPointer(texCoordAttrib, 2, GL_FLOAT, GL_FALSE, stride,

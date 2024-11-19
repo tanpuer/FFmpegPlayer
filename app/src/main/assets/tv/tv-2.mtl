@@ -164,7 +164,7 @@ illum 7
 newmtl Material-MASKA-przycisk?w
 Ka 1 1 1
 Kd 1 1 1
-map_Kd textures/Tex.details II.jpg
+map_Kd tv/textures/Tex.details II.jpg
 Ks 1 1 1
 Ns 50
 illum 7
@@ -186,7 +186,7 @@ illum 7
 newmtl Mat_wood_maskl_left
 Ka 1 1 1
 Kd 1 1 1
-map_Kd textures/Tex.details 8000.jpg
+map_Kd tv/textures/Tex.details 8000.jpg
 Ks 1 1 1
 Ns 50
 illum 7
@@ -215,7 +215,7 @@ illum 7
 newmtl Mat_casing
 Ka 1 1 1
 Kd 1 1 1
-map_Kd textures/tex casing.jpg
+map_Kd tv/textures/tex casing.jpg
 Ks 1 1 1
 Ns 50
 illum 7
@@ -230,7 +230,7 @@ illum 7
 newmtl skia
 Ka 1 1 1
 Kd 0.80000001192093 0.80000001192093 0.80000001192093
-map_Kd textures/2.jpg
+map_Kd tv/textures/2.jpg
 Ks 1 1 1
 Ns 50
 illum 7

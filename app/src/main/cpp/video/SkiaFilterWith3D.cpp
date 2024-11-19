@@ -58,7 +58,7 @@ void SkiaFilterWith3D::drawTextures(VideoData *data) {
 
 void SkiaFilterWith3D::setWindowSize(int width, int height) {
     auto minSize = std::min(width, height);
-    skiaWidth = minSize * 0.8;
+    skiaWidth = minSize * 0.75;
     skiaHeight = minSize;
     if (skiaFramebuffer != 0) {
         glDeleteFramebuffers(1, &skiaFramebuffer);
@@ -154,7 +154,7 @@ void SkiaFilterWith3D::render(VideoData *data) {
     skCanvas->restore();
     if (paragraph != nullptr) {
         paragraph->layout(skiaWidth);
-        paragraph->paint(skCanvas, 0, 0);
+        paragraph->paint(skCanvas, 0, 100);
     }
 
     skiaContext->flushAndSubmit(GrSyncCpu::kNo);
@@ -188,7 +188,7 @@ void SkiaFilterWith3D::setTitle(const char *title) {
     skia::textlayout::ParagraphStyle paraStyle;
     auto paragraphBuilder = ParagraphBuilder::make(paraStyle, fontCollection);
     TextStyle textStyle;
-    textStyle.setFontSize(100);
+    textStyle.setFontSize(50);
     textStyle.setColor(SK_ColorGREEN);
     textStyle.setFontFamilies({SkString("Alimama")});
     paragraphBuilder->pushStyle(textStyle);
