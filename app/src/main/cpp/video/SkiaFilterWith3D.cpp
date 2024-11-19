@@ -58,7 +58,7 @@ void SkiaFilterWith3D::drawTextures(VideoData *data) {
 
 void SkiaFilterWith3D::setWindowSize(int width, int height) {
     auto minSize = std::min(width, height);
-    skiaWidth = minSize * 0.75;
+    skiaWidth = minSize * getWidthRatio();
     skiaHeight = minSize;
     if (skiaFramebuffer != 0) {
         glDeleteFramebuffers(1, &skiaFramebuffer);

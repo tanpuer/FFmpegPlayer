@@ -29,6 +29,8 @@ public:
 
     virtual void draw3D() = 0;
 
+    virtual float getWidthRatio() { return 1.0f; }
+
 protected:
 
     sk_sp<SkSurface> skiaSurface = nullptr;

@@ -29,6 +29,8 @@ public:
 
     void draw3D() override;
 
+    float getWidthRatio() override;
+
 private:
 
     std::vector<DrawObject> gDrawObjects;

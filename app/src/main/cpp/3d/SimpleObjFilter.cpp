@@ -655,3 +655,7 @@ void SimpleObjFilter::draw3D() {
         glBindTexture(GL_TEXTURE_2D, 0);
     }
 }
+
+float SimpleObjFilter::getWidthRatio() {
+    return 0.75;
+}
