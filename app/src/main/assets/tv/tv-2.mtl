@@ -226,6 +226,7 @@ Kd 1 1 1
 Ks 1 1 1
 Ns 50
 illum 7
+map_Kd skia_texture
 
 newmtl skia
 Ka 1 1 1

@@ -249,7 +249,7 @@ LoadObjAndConvert(
         float bmin[3], float bmax[3], std::shared_ptr<AssetManager> &assetManager,
         std::vector<DrawObject> *drawObjects,
         std::vector<tinyobj::material_t> &materials,
-        std::map<std::string, GLuint> &textures) {
+        std::map<std::string, GLuint> &textures, GLuint skiaTexture) {
     tinyobj::attrib_t inattrib;
     std::vector<tinyobj::shape_t> inshapes;
 
@@ -290,6 +290,11 @@ LoadObjAndConvert(
             if (mp->diffuse_texname.length() > 0) {
                 // Only load the texture if it is not already loaded
                 if (textures.find(mp->diffuse_texname) == textures.end()) {
+                    if (mp->diffuse_texname == "skia_texture") {
+                        textures.insert(std::make_pair(mp->diffuse_texname, skiaTexture));
+                        continue;
+                    }
+
                     GLuint texture_id;
                     int w, h;
                     int comp;
@@ -569,7 +574,7 @@ SimpleObjFilter::~SimpleObjFilter() {
 void SimpleObjFilter::draw3D() {
     if (gDrawObjects.empty()) {
         float bmin[3], bmax[3];
-        LoadObjAndConvert("tv/tv-2.obj", "tv/tv-2.mtl", bmin, bmax, assetManager, &gDrawObjects, materials, textures);
+        LoadObjAndConvert("tv/tv-2.obj", "tv/tv-2.mtl", bmin, bmax, assetManager, &gDrawObjects, materials, textures, skiaTexture);
 
         float maxExtent = 0.5f * (bmax[0] - bmin[0]);
         if (maxExtent < 0.5f * (bmax[1] - bmin[1])) {
@@ -617,14 +622,7 @@ void SimpleObjFilter::draw3D() {
                 glActiveTexture(GL_TEXTURE0 + textures[diffuse_texname]);
                 glBindTexture(GL_TEXTURE_2D, textures[diffuse_texname]);
                 glUniform1i(skiaTextureLocation, textures[diffuse_texname]);
-            } else if (o.numTriangles > 5000) {
-                //TODO!!!!!
-                skiaTextureLocation = glGetUniformLocation(program, "skia_texture");
-                glActiveTexture(GL_TEXTURE0 + skiaTexture);
-                glBindTexture(GL_TEXTURE_2D, skiaTexture);
-                glUniform1i(skiaTextureLocation, skiaTexture);
             }
-
         }
         // Vertex position
         GLint posAttrib = glGetAttribLocation(program, "position");
