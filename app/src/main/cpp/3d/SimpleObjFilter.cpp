@@ -574,7 +574,7 @@ SimpleObjFilter::~SimpleObjFilter() {
 void SimpleObjFilter::draw3D() {
     if (gDrawObjects.empty()) {
         float bmin[3], bmax[3];
-        LoadObjAndConvert("tv/tv-2.obj", "tv/tv-2.mtl", bmin, bmax, assetManager, &gDrawObjects, materials, textures, skiaTexture);
+        LoadObjAndConvert("tv/tv.obj", "tv/tv.mtl", bmin, bmax, assetManager, &gDrawObjects, materials, textures, skiaTexture);
 
         float maxExtent = 0.5f * (bmax[0] - bmin[0]);
         if (maxExtent < 0.5f * (bmax[1] - bmin[1])) {
