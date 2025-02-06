@@ -5,3 +5,4 @@
 
 ![image](https://github.com/tanpuer/FFmpegPlayer/blob/master/example.png)
 ![image](https://github.com/tanpuer/FFmpegPlayer/blob/master/example2.png)
+![image](https://github.com/tanpuer/FFmpegPlayer/blob/master/example3.png)
